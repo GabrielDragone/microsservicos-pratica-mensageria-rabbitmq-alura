@@ -51,3 +51,36 @@ Curso de Microsserviços na prática: mensageria com RabbitMQ.
     * STOMP: Simple Text Oriented Messaging Protocol. Protocolo baseado em texto, construído para trabalhar com middlewares orientados à mensagem.
       * Similiar ao AMQP, com cabeçalho, propriedades e corpo da mensagem, porém não lida com tópicos ou filas.
       * Usa semântica de string de destino.
+* 05 - Preparando o ambiente:
+  * Será dividido em duas partes:
+    * Servidor: Recebe, processa e encaminha as mensagens para as filas.
+    * Cliente: Onde ficam as bibliotecas/dependencias e usamos para publicar e consumir mensagens.
+  * https://rabbitmq.com/
+  * Comando Docker:
+    * ```docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-management```
+  * Acessar: http://localhost:15672/
+    * user: guest
+    * pass: guest
+  * Já vem com algumas exchanges padrões:
+    * ![img.png](images/img.png)
+  * Em relação às filas, acessamos através do menu Queues:
+    * Durability: Se a fila é durável ou não. Se o RabbitMQ cair, as mensagens não são perdidas.
+    * Auto delete: A fila é deletada automaticamente quando não tem mais consumidores.
+    * Auto expire: Se a fila estiver parada, sem ngm mandar mensagem pra ela, configuramos pra que daqui um tempo ela expire e ngm possa mandar mensagem mais pra ela.
+    * Message TTL: Quanto tempo uma mensagem publicada numa fila irá viver antes de ser descartada.
+    * Lazy mode: Coloque a fila no modo lento, mantendo o máximo de mensagens possível no disco para reduzir o uso de RAM; se não for definido, a fila manterá um cache na memória para entregar mensagens o mais rápido possível.
+    * Podemos definir também o tamanho maximo da fila, ou seja, a quantidade de mensagens que ela pode armazenar antes de começar a remove-las.
+    * Tamanho da mensagem em bytes.
+    * Single Active Consumer: Se habilitado, apenas um consumidor pode consumir mensagens de uma fila.
+    * Overflow behavior: O que fazer quando a fila atinge o limite de tamanho. Exemplos: rejeitar novas mensagens, descartar mensagens antigas, etc.
+* 06 - Para saber mais: documentação do RabbitMQ:
+  * Documentação oficial: https://www.rabbitmq.com/
+  * Repositórios GitHub para exemplos: https://github.com/rabbitmq
+* 07 - Para saber mais: Docker Compose:
+  * Criado docker-compose para facilitar a subida dos serviços: [docker-compose.yml](docker%2Fdocker-compose.yml).
+  * Comandos: 
+    * ```docker-compose up```
+    * ```docker-compose down```
+* 08 - Validade das mensagens:
+  * Qual opção utilizar quando passar de um determinado período e nenhum subscriber consuma essas mensagens, elas deverão ser descartadas?
+    * O Message TTL é justamente para esse propósito, definir o tempo que uma mensagem publicada pode permanecer na fila antes de ser descartada.
